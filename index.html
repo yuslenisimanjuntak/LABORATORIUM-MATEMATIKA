@@ -198,6 +198,7 @@ function gambar() {
   gambarGrafik(a,h,k);
 }
 
+
 function gambarGrafik(a,h,k) {
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.getBoundingClientRect();
@@ -217,25 +218,25 @@ function gambarGrafik(a,h,k) {
 
   ctx.clearRect(0,0,w,height);
 
-  // Garis kisi
+  // Kisi koordinat
   ctx.strokeStyle = "#e5eaf0";
   ctx.lineWidth = 1;
 
-  for(let x = -20; x <= 20; x++) {
+  for(let x=-20; x<=20; x++) {
     ctx.beginPath();
     ctx.moveTo(X(x),0);
     ctx.lineTo(X(x),height);
     ctx.stroke();
   }
 
-  for(let y = -10; y <= 10; y++) {
+  for(let y=-10; y<=10; y++) {
     ctx.beginPath();
     ctx.moveTo(0,Y(y));
     ctx.lineTo(w,Y(y));
     ctx.stroke();
   }
 
-  // Sumbu koordinat
+  // Sumbu X dan Y
   ctx.strokeStyle = "#334155";
   ctx.lineWidth = 2;
 
@@ -254,39 +255,69 @@ function gambarGrafik(a,h,k) {
   ctx.font = "11px Arial";
 
   for(let x=-10; x<=10; x++) {
-    if(x !== 0 && X(x)>10 && X(x)<w-10)
+    if(x!==0 && X(x)>10 && X(x)<w-10)
       ctx.fillText(x,X(x)-4,Y(0)+15);
   }
 
   for(let y=-6; y<=6; y++) {
-    if(y !== 0 && Y(y)>10 && Y(y)<height-10)
+    if(y!==0 && Y(y)>10 && Y(y)<height-10)
       ctx.fillText(y,X(0)+6,Y(y)+4);
   }
 
   ctx.fillText("Y",X(0)+9,15);
   ctx.fillText("X",w-15,Y(0)-8);
 
-  // Grafik fungsi y = a(x-h)^2+k
+  // GRAFIK AWAL f(x) = x²
+  ctx.beginPath();
+  ctx.strokeStyle = "#64748b";
+  ctx.lineWidth = 3;
+  ctx.setLineDash([7,5]);
+
+  for(let px=0; px<=w; px++) {
+    const x=(px-ox)/skala;
+    const y=x*x;
+    const py=Y(y);
+
+    if(px===0) ctx.moveTo(px,py);
+    else ctx.lineTo(px,py);
+  }
+
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // GRAFIK BARU g(x) = a(x-h)²+k
   ctx.beginPath();
   ctx.strokeStyle = "#1673d1";
   ctx.lineWidth = 3;
 
   for(let px=0; px<=w; px++) {
-    const x = (px-ox)/skala;
-    const y = a*Math.pow(x-h,2)+k;
-    const py = Y(y);
+    const x=(px-ox)/skala;
+    const y=a*Math.pow(x-h,2)+k;
+    const py=Y(y);
 
     if(px===0) ctx.moveTo(px,py);
     else ctx.lineTo(px,py);
   }
+
   ctx.stroke();
 
-  // Titik puncak
+  // Titik puncak grafik baru
   ctx.fillStyle = "#dc2626";
   ctx.beginPath();
   ctx.arc(X(h),Y(k),5,0,Math.PI*2);
   ctx.fill();
+
+  ctx.fillStyle = "#dc2626";
+  ctx.font = "bold 12px Arial";
   ctx.fillText(`P(${h}, ${k})`,X(h)+8,Y(k)-10);
+
+  // Keterangan grafik
+  ctx.font = "bold 12px Arial";
+  ctx.fillStyle = "#64748b";
+  ctx.fillText("— — Grafik awal f(x)=x²",12,22);
+
+  ctx.fillStyle = "#1673d1";
+  ctx.fillText("━━ Grafik baru g(x)",12,42);
 }
 
 function resetGrafik() {
