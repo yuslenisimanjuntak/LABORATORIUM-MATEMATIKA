@@ -1,12 +1,308 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kelas Bu Yusleni</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laboratorium Matematika - Bu Yusleni</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f1f5f9;
+  color: #1e293b;
+}
+header {
+  background: #173b65;
+  color: white;
+  padding: 25px 16px;
+  text-align: center;
+}
+header h1 { margin: 0 0 8px; }
+header p { margin: 0; }
+main {
+  max-width: 1050px;
+  margin: 25px auto;
+  padding: 0 15px;
+}
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px #00000010;
+}
+h2 { color: #173b65; margin-top: 0; }
+.formula {
+  background: #e8f1ff;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 23px;
+  font-weight: bold;
+  color: #173b65;
+}
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(210px,1fr));
+  gap: 20px;
+}
+label { font-weight: bold; display: block; }
+input[type=range] { width: 100%; margin-top: 12px; }
+.value { color: #1765b3; font-weight: bold; }
+canvas {
+  width: 100%;
+  height: 430px;
+  display: block;
+  border: 1px solid #dbe3ed;
+  border-radius: 8px;
+  background: white;
+}
+button {
+  background: #173b65;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 15px;
+}
+button:hover { background: #24578d; }
+.explanation {
+  background: #f0fdf4;
+  border-left: 5px solid #16a34a;
+  padding: 15px;
+  line-height: 1.7;
+}
+footer {
+  text-align: center;
+  padding: 22px;
+  color: #64748b;
+}
+</style>
 </head>
 <body>
-  <h1>Selamat datang!</h1>
-  <p>Website kelas Matematika.</p>
+
+<header>
+  <h1>🔬 LABORATORIUM MATEMATIKA</h1>
+  <p>Ruang Eksplorasi Transformasi Fungsi</p>
+  <p>Kelas XII SMA | Bu Yusleni</p>
+</header>
+
+<main>
+  <section class="card">
+    <h2>1. Mengenal Transformasi Fungsi</h2>
+    <p>
+      Mari mengamati bagaimana grafik fungsi kuadrat berubah
+      ketika kita menggeser atau merefleksikannya.
+    </p>
+    <div class="formula" id="formula">
+      g(x) = (x - 0)² + 0
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>2. Atur Transformasi Grafik</h2>
+    <div class="controls">
+
+      <div>
+        <label>Nilai a: <span class="value" id="av">1</span></label>
+        <input id="a" type="range" min="-2" max="2"
+        step="0.25" value="1">
+        <small>Pengaruh bentuk dan refleksi grafik.</small>
+      </div>
+
+      <div>
+        <label>Geser horizontal (h):
+        <span class="value" id="hv">0</span></label>
+        <input id="h" type="range" min="-5" max="5"
+        step="1" value="0">
+        <small>Positif ke kanan, negatif ke kiri.</small>
+      </div>
+
+      <div>
+        <label>Geser vertikal (k):
+        <span class="value" id="kv">0</span></label>
+        <input id="k" type="range" min="-5" max="5"
+        step="1" value="0">
+        <small>Positif ke atas, negatif ke bawah.</small>
+      </div>
+
+    </div>
+    <p style="margin-top:20px">
+      <button onclick="resetGrafik()">Kembalikan ke awal</button>
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>3. Amati Grafik Fungsi</h2>
+    <p>Grafik biru menunjukkan fungsi hasil transformasi.</p>
+    <canvas id="grafik"></canvas>
+  </section>
+
+  <section class="card">
+    <h2>4. Penjelasan Transformasi</h2>
+    <div class="explanation" id="penjelasan"></div>
+  </section>
+</main>
+
+<footer>
+  Laboratorium Matematika | Media Pembelajaran Interaktif
+</footer>
+
+<script>
+const canvas = document.getElementById("grafik");
+const ctx = canvas.getContext("2d");
+
+const aInput = document.getElementById("a");
+const hInput = document.getElementById("h");
+const kInput = document.getElementById("k");
+
+function gambar() {
+  const a = Number(aInput.value);
+  const h = Number(hInput.value);
+  const k = Number(kInput.value);
+
+  document.getElementById("av").textContent = a;
+  document.getElementById("hv").textContent = h;
+  document.getElementById("kv").textContent = k;
+
+  let tanda = h > 0 ? "-" : "+";
+  let angkaH = Math.abs(h);
+  let tandaK = k >= 0 ? "+" : "-";
+
+  document.getElementById("formula").textContent =
+    `g(x) = ${a}(x ${tanda} ${angkaH})² ${tandaK} ${Math.abs(k)}`;
+
+  let penjelasan = "";
+
+  if (a > 0) {
+    penjelasan += "Parabola terbuka ke atas. ";
+  } else if (a < 0) {
+    penjelasan += "Parabola terbuka ke bawah (refleksi terhadap sumbu X). ";
+  } else {
+    penjelasan += "Grafik menjadi garis horizontal. ";
+  }
+
+  if (h > 0) penjelasan += `Grafik bergeser ${h} satuan ke kanan. `;
+  else if (h < 0) penjelasan += `Grafik bergeser ${Math.abs(h)} satuan ke kiri. `;
+  else penjelasan += "Tidak ada pergeseran horizontal. ";
+
+  if (k > 0) penjelasan += `Grafik bergeser ${k} satuan ke atas.`;
+  else if (k < 0) penjelasan += `Grafik bergeser ${Math.abs(k)} satuan ke bawah.`;
+  else penjelasan += "Tidak ada pergeseran vertikal.";
+
+  document.getElementById("penjelasan").textContent = penjelasan;
+
+  gambarGrafik(a,h,k);
+}
+
+function gambarGrafik(a,h,k) {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  const w = rect.width;
+  const height = 430;
+
+  canvas.width = w * dpr;
+  canvas.height = height * dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+
+  const skala = 32;
+  const ox = w / 2;
+  const oy = height / 2;
+
+  function X(x) { return ox + x * skala; }
+  function Y(y) { return oy - y * skala; }
+
+  ctx.clearRect(0,0,w,height);
+
+  // Garis kisi
+  ctx.strokeStyle = "#e5eaf0";
+  ctx.lineWidth = 1;
+
+  for(let x = -20; x <= 20; x++) {
+    ctx.beginPath();
+    ctx.moveTo(X(x),0);
+    ctx.lineTo(X(x),height);
+    ctx.stroke();
+  }
+
+  for(let y = -10; y <= 10; y++) {
+    ctx.beginPath();
+    ctx.moveTo(0,Y(y));
+    ctx.lineTo(w,Y(y));
+    ctx.stroke();
+  }
+
+  // Sumbu koordinat
+  ctx.strokeStyle = "#334155";
+  ctx.lineWidth = 2;
+
+  ctx.beginPath();
+  ctx.moveTo(0,Y(0));
+  ctx.lineTo(w,Y(0));
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(X(0),0);
+  ctx.lineTo(X(0),height);
+  ctx.stroke();
+
+  // Angka koordinat
+  ctx.fillStyle = "#475569";
+  ctx.font = "11px Arial";
+
+  for(let x=-10; x<=10; x++) {
+    if(x !== 0 && X(x)>10 && X(x)<w-10)
+      ctx.fillText(x,X(x)-4,Y(0)+15);
+  }
+
+  for(let y=-6; y<=6; y++) {
+    if(y !== 0 && Y(y)>10 && Y(y)<height-10)
+      ctx.fillText(y,X(0)+6,Y(y)+4);
+  }
+
+  ctx.fillText("Y",X(0)+9,15);
+  ctx.fillText("X",w-15,Y(0)-8);
+
+  // Grafik fungsi y = a(x-h)^2+k
+  ctx.beginPath();
+  ctx.strokeStyle = "#1673d1";
+  ctx.lineWidth = 3;
+
+  for(let px=0; px<=w; px++) {
+    const x = (px-ox)/skala;
+    const y = a*Math.pow(x-h,2)+k;
+    const py = Y(y);
+
+    if(px===0) ctx.moveTo(px,py);
+    else ctx.lineTo(px,py);
+  }
+  ctx.stroke();
+
+  // Titik puncak
+  ctx.fillStyle = "#dc2626";
+  ctx.beginPath();
+  ctx.arc(X(h),Y(k),5,0,Math.PI*2);
+  ctx.fill();
+  ctx.fillText(`P(${h}, ${k})`,X(h)+8,Y(k)-10);
+}
+
+function resetGrafik() {
+  aInput.value=1;
+  hInput.value=0;
+  kInput.value=0;
+  gambar();
+}
+
+aInput.addEventListener("input",gambar);
+hInput.addEventListener("input",gambar);
+kInput.addEventListener("input",gambar);
+
+window.addEventListener("resize",gambar);
+gambar();
+</script>
+
 </body>
 </html>
