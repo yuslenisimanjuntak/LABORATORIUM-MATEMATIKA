@@ -80,6 +80,28 @@ footer {
   padding: 22px;
   color: #64748b;
 }
+.menu {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 15px;
+  background: #eaf2ff;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #174ea6;
+  font-weight: bold;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: white;
+}
+
+.menu a:hover {
+  background: #174ea6;
+  color: white;
+}
 </style>
 </head>
 <body>
@@ -89,7 +111,13 @@ footer {
   <p>Ruang Eksplorasi Transformasi Fungsi</p>
   <p>Kelas XII SMA | Bu Yusleni</p>
 </header>
-
+<nav class="menu">
+  <a href="#beranda">Beranda</a>
+  <a href="#fungsi">Fungsi</a>
+  <a href="#transformasi">Transformasi</a>
+  <a href="#statistika">Statistika</a>
+  <a href="#kuis">Kuis</a>
+</nav>
 <main>
   <section class="card">
     <h2>1. Mengenal Transformasi Fungsi</h2>
